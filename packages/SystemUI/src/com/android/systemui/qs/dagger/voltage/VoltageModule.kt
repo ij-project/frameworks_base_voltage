@@ -26,6 +26,7 @@ import com.android.systemui.qs.tiles.CPUInfoTile
 import com.android.systemui.qs.tiles.DataSwitchTile
 import com.android.systemui.qs.tiles.FPSInfoTile
 import com.android.systemui.qs.tiles.AmbientDisplayTile
+import com.android.systemui.qs.tiles.AODTile
 import com.android.systemui.qs.tiles.CaffeineTile
 import com.android.systemui.qs.tiles.CompassTile
 import com.android.systemui.qs.tiles.RefreshRateTile
@@ -50,6 +51,12 @@ interface VoltageModule {
     @IntoMap
     @StringKey(CaffeineTile.TILE_SPEC)
     fun bindCaffeineTile(caffeineTile: CaffeineTile): QSTileImpl<*>
+
+    /** Inject AODTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(AODTile.TILE_SPEC)
+    fun bindAODTile(aodTile: AODTile): QSTileImpl<*>
 
     /** Inject CellularTile into tileMap in QSModule */
     @Binds
