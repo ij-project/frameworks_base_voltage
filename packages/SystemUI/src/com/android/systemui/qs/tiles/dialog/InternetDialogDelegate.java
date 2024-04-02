@@ -354,8 +354,8 @@ public class InternetDialogDelegate implements
         mMobileNetworkLayout.setOnClickListener(null);
         mMobileNetworkLayout.setOnLongClickListener(null);
         mFivegToggle.setOnCheckedChangeListener(null);
-        mHotspotLayout.setOnClickListener(null);
-        mHotspotToggle.setOnClickListener(null);
+        mHotspotLayout.setOnLongClickListener(null);
+        mHotspotToggle.setOnCheckedChangeListener(null);
         mMobileDataToggle.setOnClickListener(null);
         mConnectedWifListLayout.setOnClickListener(null);
         if (mSecondaryMobileNetworkLayout != null) {
@@ -454,10 +454,12 @@ public class InternetDialogDelegate implements
         mFivegToggle.setOnClickListener(v -> {
             mInternetDialogController.setFivegEnabled(mFivegToggle.isChecked());
         });
-        mHotspotLayout.setOnClickListener(mInternetDialogController::launchHotspotSetting);
-        mHotspotToggle.setOnClickListener(v -> {
-            mInternetDialogController.setHotspotEnabled(mHotspotToggle.isChecked());
+        mHotspotLayout.setOnLongClickListener(v -> {
+                mInternetDialogController.launchHotspotSetting(v);
+                return true;
         });
+        mHotspotToggle.setOnCheckedChangeListener(
+                (buttonView, isChecked) -> mInternetDialogController.setHotspotEnabled(isChecked));
         mConnectedWifListLayout.setOnClickListener(this::onClickConnectedWifi);
         mSeeAllLayout.setOnClickListener(this::onClickSeeMoreButton);
         mWiFiToggle.setOnClickListener(v -> {
