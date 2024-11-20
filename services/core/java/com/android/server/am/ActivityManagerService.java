@@ -4906,7 +4906,7 @@ public class ActivityManagerService extends IActivityManager.Stub
             if (!mConstants.mEnableWaitForFinishAttachApplication) {
                 finishAttachApplicationInner(startSeq, callingUid, pid);
             }
-            maybeSendBootCompletedLocked(app, isRestrictedBackupMode);
+            maybeSendBootCompletedLocked(app, isRestrictedBackupMode, shouldSkipBootCompletedBroadcastForPackage(app.getApplicationInfo()));
         } catch (Exception e) {
             // We need kill the process group here. (b/148588589)
             Slog.wtf(TAG, "Exception thrown during bind of " + app, e);
@@ -5151,7 +5151,8 @@ public class ActivityManagerService extends IActivityManager.Stub
      * Send LOCKED_BOOT_COMPLETED and BOOT_COMPLETED to the package explicitly when unstopped,
      * or when the package first starts in private space
      */
-    private void maybeSendBootCompletedLocked(ProcessRecord app, boolean isRestrictedBackupMode) {
+    private void maybeSendBootCompletedLocked(ProcessRecord app, 
+            boolean isRestrictedBackupMode, boolean shouldSkipBootCompletedBroadcastForPackage) {
         boolean sendBroadcast = false;
         if (android.os.Flags.allowPrivateProfile()
                 && android.multiuser.Flags.enablePrivateSpaceFeatures()) {
@@ -5178,7 +5179,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         }
 
         // Don't send BOOT_COMPLETED if currently in restricted backup mode
-        if (isRestrictedBackupMode) return;
+        if (isRestrictedBackupMode || shouldSkipBootCompletedBroadcastForPackage) return;
 
         if (!sendBroadcast) {
             if (!android.content.pm.Flags.stayStopped()) return;
@@ -21282,5 +21283,11 @@ public class ActivityManagerService extends IActivityManager.Stub
     @GuardedBy("this")
     void clearPendingTopAppLocked() {
         mPendingStartActivityUids.clear();
+    }
+    
+    public boolean shouldSkipBootCompletedBroadcastForPackage(ApplicationInfo info) {
+        return getAppOpsManager().checkOpNoThrow(
+                AppOpsManager.OP_RUN_ANY_IN_BACKGROUND,
+                info.uid, info.packageName) != AppOpsManager.MODE_ALLOWED;
     }
 }
