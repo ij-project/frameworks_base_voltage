@@ -22,7 +22,6 @@ import com.android.systemui.qs.tiles.WifiTile
 import com.android.systemui.qs.tiles.WeatherTile
 import com.android.systemui.qs.tiles.HeadsUpTile
 import com.android.systemui.qs.tiles.SyncTile
-import com.android.systemui.qs.tiles.AODTile
 import com.android.systemui.qs.tiles.CPUInfoTile
 import com.android.systemui.qs.tiles.DataSwitchTile
 import com.android.systemui.qs.tiles.FPSInfoTile
@@ -129,12 +128,6 @@ interface VoltageModule {
     @IntoMap
     @StringKey(VPNTetheringTile.TILE_SPEC)
     fun bindVPNTetheringTile(vpnTetheringTile: VPNTetheringTile): QSTileImpl<*>
-
-    /** Inject AODTile into tileMap in QSModule */
-    @Binds
-    @IntoMap
-    @StringKey(AODTile.TILE_SPEC)
-    fun bindAODTile(aodTile: AODTile): QSTileImpl<*>
 
     /** Inject CPUInfoTile into tileMap in QSModule */
     @Binds
